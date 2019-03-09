@@ -142,19 +142,25 @@ public class Actions {
         return containerInstanceIdList;
     }
 	
-	private static void getContainerResources(List<String> containerInstances) {
+	private static List<RemainingResources> getContainerResources(List<String> containerInstances) {
 		DescribeContainerInstancesResult result = describeContainerInstances(containerInstances);
-		for (ContainerInstance c : result.getContainerInstances()) {
-			System.out.println("Resource for container instance" + c.getContainerInstanceArn());
-			for (Resource r : c.getRegisteredResources()) {
-				System.out.println("Registered-> " + r.getName() + " : " + r.getIntegerValue());
-			}
-			for (Resource r : c.getRemainingResources()) {
-				System.out.println("Remaining-> " + r.getName() + " : " + r.getIntegerValue());
-			}
+		List<RemainingResources> resources = new ArrayList<>();
+		result.getContainerInstances().forEach(containerInstance -> {
+			RemainingResources remainingResources = new RemainingResources(containerInstance.getEc2InstanceId(),
+					containerInstance.getContainerInstanceArn(), containerInstance.getRunningTasksCount());
 
-		}
-
+			containerInstance.getRemainingResources().forEach(res -> {
+				if (res.getName() == "CPU") {
+					remainingResources.freeSpace.cpu_avaliable = res.getIntegerValue();
+				}
+				if (res.getName() == "MEMORY") {
+					remainingResources.freeSpace.memory_avaliable = res.getIntegerValue();
+				}
+			});
+			System.out.println(remainingResources); // for debugging
+			resources.add(remainingResources);
+		});
+		return resources;
 	}
 	
 	private static void taskMonitoring(List<String> containerInstances) {
