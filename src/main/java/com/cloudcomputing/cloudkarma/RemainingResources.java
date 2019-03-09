@@ -1,18 +1,17 @@
 package com.cloudcomputing.cloudkarma;
 
+import lombok.Data;
+import lombok.ToString;
+
+@ToString(includeFieldNames = true)
+@Data
 public class RemainingResources {
 
+	@ToString(includeFieldNames = true)
+	@Data
 	public class FreeSpace {
-
-		int cpu_avaliable;
-		int memory_avaliable;
-
-		@Override
-		public String toString() {
-			return "CPU avaliable:" + cpu_avaliable + "Memory Avaliable: " + memory_avaliable;
-
-		}
-
+		int cpuAvailable;
+		int memoryAvailable;
 	}
 
 	String ec2InstanceId;
@@ -24,23 +23,13 @@ public class RemainingResources {
 		this.ec2InstanceId = ec2InstanceId;
 		this.containerInstanceArn = containerInstanceArn;
 		this.runningTasksCount = runningTasksCount;
-
 	}
 
-	public void setCpuAvaliable(int cpu_avaliable) {
-		this.freeSpace.cpu_avaliable = cpu_avaliable;
-
+	public void setCpuAvaliable(int cpuAvailable) {
+		this.freeSpace.cpuAvailable = cpuAvailable;
 	}
 
-	public void setMemoryAvaliable(int memory_avaliable) {
-		this.freeSpace.memory_avaliable = memory_avaliable;
-
+	public void setMemoryAvaliable(int memoryAvailable) {
+		this.freeSpace.memoryAvailable = memoryAvailable;
 	}
-
-	@Override
-	public String toString() {
-		return "ec2InstanceId: " + ec2InstanceId + "containerInstanceArn: " + containerInstanceArn
-				+ "runningTasksCount: " + runningTasksCount + "freeSpace: " + freeSpace;
-	}
-
 }
